@@ -28,13 +28,13 @@ class Financing(VariantBalance):
         self.insurance = insurance
         self.admin_tax = admin_tax
         self.payed_in = None
-        super().__init__(-balance_due,anual_interest)
+        super().__init__(balance_due,anual_interest)
 
     def get_quote(self):
         if self.balance <= 0:
             return 0
         if self.balance > self.amortization:
-            return self.amortization + self.balance*self.iterest + self.admin_tax +self.insurance
+            return self.amortization + self.balance*self.interest + self.admin_tax +self.insurance
         else :
             return self.balance + self.admin_tax +self.insurance
 
