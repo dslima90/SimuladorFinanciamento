@@ -2,9 +2,14 @@
 
 from VariantBalance import VariantBalance, Financing
 
+from matplotlib import pyplot as plt
+
 
 def monthly_sim(financing,account,fgts,monthly_income,fgts_monthly_income, number_of_months = 360, verbose = False, verbose_every = 1):
 
+    list_account = []
+    list_fin = []
+    
     if verbose:
         print("Inciando simulação de financiamento de R${:.2f}, conta inicial: R${:.2f}".format(financing.balance,account.balance))
 
@@ -24,8 +29,15 @@ def monthly_sim(financing,account,fgts,monthly_income,fgts_monthly_income, numbe
         account.pass_month()
         fgts.pass_month()
         if verbose and ((month - 1) % verbose_every == 0):
-            print("mês: {} - Saldo da conta: {}, saldo do FGTS: {}, divida: {}, parcela: {}".format(month,account.balance,fgts.balance,financing.balance,quote))
+            print("mês: {} - Saldo da conta: R${:,.2f}, saldo do FGTS: R${:,.2f}, divida: R${:,.2f}, parcela: R${:,.2f}".format(month,account.balance,fgts.balance,financing.balance,quote))
 
+        list_account.append(account.balance)
+        list_fin.append(financing.balance)
+    plt.plot(list_account)
+    plt.plot(list_fin)
+    plt.grid()
+    plt.show()
+        
     if verbose:
         print("""Simulação finalizada:
         O saldo na conta é de: R${:,.2f}
@@ -36,11 +48,11 @@ def monthly_sim(financing,account,fgts,monthly_income,fgts_monthly_income, numbe
 INTIAL_BALANCE = 80000
 REALTY_VALUE = 310000
 PERC_FINANCED = .8
-MONTHLY_INCOME = 2500
+MONTHLY_INCOME = 3000
 FGTS_MONTHLY = 800
 
-FINANCING_INTEREST = .10
-INVESTMENT_INTEREST = .11
+FINANCING_INTEREST = .09
+INVESTMENT_INTEREST = .12
 FGTS_INTEREST = .03
 
 entry = REALTY_VALUE*(1-PERC_FINANCED)
@@ -58,5 +70,5 @@ financing = Financing(financed, FINANCING_INTEREST, 360)
 
 fgts = VariantBalance(0,FGTS_INTEREST)
 
-monthly_sim(financing,account,fgts,3000,800,verbose=True,verbose_every=12)
+monthly_sim(financing,account,fgts,MONTHLY_INCOME,FGTS_MONTHLY,verbose=True,verbose_every=12)
 
